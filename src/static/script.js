@@ -4,6 +4,7 @@ let socket = io.connect('http://' + document.domain + ':' + location.port);
 
 
         socket.on('connect', function () {
+            socket.emit('join', data='hola');
             console.log('Connected to the server');
         });
 

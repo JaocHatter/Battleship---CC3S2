@@ -9,8 +9,6 @@ socketio = SocketIO(app)
 
 roomBp = Blueprint('sala', __name__)
 
-@roomBp.route('/game')
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -26,10 +24,11 @@ def handle_connect():
 
 @socketio.on('new_game')
 def create_game():
-    # id = generate(5)
     id= generate(size=5)
     print('new game created')
     socketio.emit('new game', id)
+
+
 
 
 @socketio.on('message')
@@ -39,4 +38,4 @@ def handle_message(data):
     
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True)
+    socketio.run(app, host='0.0.0.0', port=5000)
