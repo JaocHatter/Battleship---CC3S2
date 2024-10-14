@@ -1,4 +1,7 @@
-var socket = io.connect('http://' + document.domain + ':' + location.port);
+console.log("Js conectado")
+
+let socket = io.connect('http://' + document.domain + ':' + location.port);
+
 
         socket.on('connect', function () {
             console.log('Connected to the server');
@@ -8,7 +11,21 @@ var socket = io.connect('http://' + document.domain + ':' + location.port);
             console.log('Server says: ' + data);
         });
 
+        socket.on('new game', function(id){
+            console.log('game id: ', id);
+            window.location.href = "http://localhost:5000/game/"+id;
+        })
+
         function sendMessage() {
             var message = document.getElementById('message').value;
             socket.emit('message', message);
         }
+
+
+
+function newGame(){
+    console.log("new game")
+    socket.emit('new_game')
+
+}
+
