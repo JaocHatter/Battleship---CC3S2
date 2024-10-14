@@ -7,8 +7,18 @@
     </script>
 </head>
 <body>
-    <h1>WebSocket Example</h1>
-    <input type="text" id="message" placeholder="Type a message">
-    <button onclick="sendMessage()">Send</button>
+    <h1>Bienvenido al multijugador battleship del grupo 11</h1>
+    <h4>Por favor, ingrese el Id de un juego existente o cree un nuevo juego para asignarle un Id</h4>
+    <br>
+    <div id="btns-container">
+        <div id="new-game-container">
+            <button onclick="newGame()">Crear un nuevo juego</button>
+        </div>
+        <div id="join-game-container">
+            <input type="text" id="room_id" placeholder="Id de la sala">
+            <button id="join-game">Entrar a una sala</button>
+        </div>
+    </div>  
+    
 </body>
 </html>
