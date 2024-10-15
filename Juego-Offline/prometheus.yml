@@ -1,0 +1,8 @@
+global:
+  scrape_interval: 5s  # Intervalo para recolectar las métricas
+
+scrape_configs:
+  - job_name: 'app'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['app:5000']  # El servicio de la aplicación para métricas se llama "app"
