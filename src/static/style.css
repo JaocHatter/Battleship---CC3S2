@@ -1,24 +1,25 @@
-body {
-    font-family: Arial, sans-serif;
-}
-
-table {
-    border-collapse: collapse;
+.board {
+    display: inline-block;
     margin: 10px;
 }
 
-td {
-    width: 40px;
-    height: 40px;
-    border: 1px solid black;
-    text-align: center;
-    vertical-align: middle;
-}
-
 .cell {
-    cursor: pointer;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 1px solid black;
+    box-sizing: border-box;
 }
 
-#player_board, #opponent_board {
-    display: inline-block;
+.ship {
+    background-color: grey;
 }
+
+.hit {
+    background-color: red;
+}
+
+.miss {
+    background-color: blue;
+}
+
