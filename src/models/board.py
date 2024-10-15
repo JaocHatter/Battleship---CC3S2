@@ -1,27 +1,37 @@
-class Board():
+class Board:
     def __init__(self, player_name):
-        self.p_name = player_name
-        self.board = [[0,0,0,0,0],
-                      [0,0,0,0,0],
-                      [0,0,0,0,0],
-                      [0,0,0,0,0],
-                      [0,0,0,0,0]]
-        self.restant_ships = 5
-        self.players = {
-            "board":self.board,
-            "ship": self.restant_ships
-        }
+        self.player_name = player_name
+        self.own_board = [[0 for _ in range(5)] for _ in range(5)]  # Tablero propio con barcos
+        self.enemy_board = [[0 for _ in range(5)] for _ in range(5)]  # Registro de disparos al enemigo
+        self.remaining_ships = 5
         self.state = "PLAYING"
-    def fire(self,x,y):
-        if self.players["board"][x][y] == 1:
-            print("HIT")
-            self.players["ship_p2"] -= 1
-            self.players["board"][x][y] = 0
-    # Por cada turno verificar quien es el ganador 
-    def verify(self):
-        if self.players["ship"] == 0:
-            print(f"{self.p_name} LOSE!")
+
+    def place_ship(self, x, y):
+        if self.own_board[x][y] == 0:
+            self.own_board[x][y] = 1
+            return True
+        else:
+            return False  # Ya hay un barco en esa posición
+
+    def receive_fire(self, x, y):
+        if self.own_board[x][y] == 1:
+            self.own_board[x][y] = -1  # Barco hundido
+            self.remaining_ships -= 1
+            hit = True
+        else:
+            self.own_board[x][y] = -2  # Agua
+            hit = False
+        return hit
+
+    def fire(self, x, y, enemy_board):
+        hit = enemy_board.receive_fire(x, y)
+        self.enemy_board[x][y] = -1 if hit else -2
+        return hit
+
+    def check_loss(self):
+        if self.remaining_ships == 0:
             self.state = "LOSE"
-            return self.state
-        return self.state
+            return True
+        return False
+
            
