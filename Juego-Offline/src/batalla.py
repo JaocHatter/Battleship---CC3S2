@@ -295,5 +295,5 @@ Elige: """
         elif eleccion == "2":
             acerca_de()
 
-
-mostrar_menu()
+if __name__ == "__main__":
+    mostrar_menu()
