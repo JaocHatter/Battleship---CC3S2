@@ -278,7 +278,7 @@ def jugar():
 
 
 def acerca_de():
-    print("Programado por Luis Cabrera Benito a.k.a. Parzibyte")
+    print("Código inspirado en el clásico juego de mesa Battleship")
 
 
 def mostrar_menu():
