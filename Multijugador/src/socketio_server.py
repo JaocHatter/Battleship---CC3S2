@@ -1,104 +1,80 @@
-from flask import Flask, render_template, Blueprint, session, request
-from flask_socketio import SocketIO, emit, join_room, leave_room
+from flask import Flask, render_template, session
+from flask_socketio import SocketIO, emit, join_room
 from nanoid import generate
-from src.models.game import Game
+from src.controllers.game_controller import GameController
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'CC3S2 -  Grupo 3'
 
 socketio = SocketIO(app)
-games = {}  # Diccionario para almacenar las instancias de juego
+games = {}  
 
-roomBp = Blueprint('sala', __name__)
 @app.route('/')
 def index():
     return render_template('index.html')
 
 @app.route('/game/<id>')
 def game_room(id):
-    print('id: ', id)
-    return render_template('gameRoom.html', id=id)    
+    print(f'id de la sala: {id}')
+    return render_template('gameRoom.html', id=id)
 
 @socketio.on('connect')
 def handle_connect():
-    print('Client connected')
+    print('Cliente conectado')
 
-# Lado del servidor
-
-# Primer jugador
 @socketio.on('new_game')
-def create_game(data):
-    player_name = data['player_name']
-    id= generate(size=5)
+def create_game():
+    id = generate(size=5)  
+    games[id] = {
+        "game": GameController('player1', 'player2'),
+        "players_ready": 0
+    }
     join_room(id)
-    games[id] = Game(room_id=id)
-    # Añadimos al primer jugador
-    games[id].add_player(request.sid, player_name)
-    print(player_name +' se ha unido al juego')
-    print('El juego ha sido generado con el id: '+id)
-    socketio.emit('juego_actual', id)
-    session['room'] = id
-    session['player_name'] = player_name
-    #DEBUG
-    print(games[id].players)
+    session['room_id'] = id 
+    session['player'] = 'player1'
+    print(f'El juego ha sido generado con el id: {id}')
+    socketio.emit('juego_actual', id, room=id)
 
-# Segundo jugador
+@socketio.on('place_ships')
+def handle_place_ships(data):
+    room_id = session.get('room_id')
+    if room_id not in games:
+        return
+
+    game = games[room_id]["game"]
+    player = session['player']
+    game.place_ships(player, data['board'])
+
+    games[room_id]["players_ready"] += 1
+    if games[room_id]["players_ready"] == 2:
+        socketio.emit('start_game', room=room_id) 
+
+@socketio.on('attack')
+def handle_attack(data):
+    room_id = session.get('room_id')
+    if room_id not in games:
+        return  
+
+    game = games[room_id]["game"]
+    player = session['player']
+
+    result, winner = game.fire(player, data['x'], data['y'])
+    socketio.emit('attack_result', {'result': result, 'x': data['x'], 'y': data['y'], 'player': player}, room=room_id)
+
+    if winner:
+        socketio.emit('game_over', {'winner': winner}, room=room_id)
+
 @socketio.on('connect_game')
 def join_game(data):
-    room_id = data['room_id']  # Obtén el ID de la sala del cliente
-    player_name = data['player_name']
-    if room_id not in games:
-        print("JUEGO NO EXISTENTE")
-        emit('error', {'message': 'La sala no existe.'}, room=request.sid) #Enviamos mensaje de error
-        return
-    join_room(room_id)  
-    games[room_id].add_player(request.sid, player_name)
-    print(player_name +' se ha unido al juego')
-    print(f'Usuario unido a la sala {room_id}')
-    session['room'] = room_id
-    session['player_name'] = player_name
-    if len(games[room_id].players) == 2:
-        socketio.emit('both_ready',room=room_id)
-        socketio.emit('start_turn', room=games[room_id].turn)
-        #DEBUG
-        print(games[room_id].players)
+    room_id = data.get('room_id')
+    print(f'Intentando unir al usuario a la sala con ID: {room_id}')
 
-@socketio.on('place_ship')
-def on_place_ship(data):
-    room_id = data['room_id']
-    x, y = data['x'], data['y']
-    game = games[room_id]
-    player_board = game.players[request.sid]
-    success = player_board.place_ship(x, y)
-    emit('ship_placed', {'success': success, 'x': x, 'y': y})
-    # Verificar si ambos jugadores han colocado sus barcos
-    if all(player.remaining_ships == 0 for player in game.players.values()):
-        socketio.emit('both_ready', room=room_id)
-
-@socketio.on('ships_ready')
-def on_ships_ready(data):
-    room_id = data['room_id']
-    # Aquí podrías implementar lógica adicional si es necesario
-    pass
-
-@socketio.on('make_move')
-def on_make_move(data):
-    room_id = data['room_id']
-    x, y = data['x'], data['y']
-    game = games[room_id]
-    result = game.make_move(request.sid, x, y)
-    if result['status'] == 'error':
-        emit('error', {'message': result['message']})
+    if room_id in games:
+        join_room(room_id)
+        session['room_id'] = room_id
+        session['player'] = 'player2'
+        print(f'Usuario unido a la sala {room_id}')
+        socketio.emit('juego_actual', room_id, room=room_id)
     else:
-        # Enviar el resultado al jugador que hizo el movimiento
-        emit('move_result', {'hit': result['hit'], 'x': x, 'y': y})
-        # Informar al oponente del disparo recibido
-        opponent_sid = game.get_opponent_sid(request.sid)
-        socketio.emit('opponent_moved', {'x': x, 'y': y, 'hit': result['hit']}, room=opponent_sid)
-        if result['status'] == 'win':
-            winner_name = game.players[request.sid].player_name
-            socketio.emit('game_over', {'winner': winner_name}, room=room_id)
-            del games[room_id]
-        else:
-            # Cambiar el turno al oponente
-            socketio.emit('start_turn', room=opponent_sid)
+        print(f'La sala con ID {room_id} no existe')
+        socketio.emit('error', 'La sala no existe')

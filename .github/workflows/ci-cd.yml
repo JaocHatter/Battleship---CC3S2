@@ -6,11 +6,15 @@ on:
       - main
       - develop
       - feature/eric
+      - feature/jared
+      - feature/adrian
   pull_request:
     branches:
       - main
       - develop
       - feature/eric
+      - feature/jared
+      - feature/adrian
 
 jobs:
   build:

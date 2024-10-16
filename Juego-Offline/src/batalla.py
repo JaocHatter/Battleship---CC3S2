@@ -283,17 +283,14 @@ def acerca_de():
 
 def mostrar_menu():
     eleccion = ""
-    while eleccion != "3":
+    while eleccion != "2":
         menu = """
 1. Jugar
-2. Acerca de
-3. Salir
+2. Salir
 Elige: """
         eleccion = input(menu)
         if eleccion == "1":
             jugar()
-        elif eleccion == "2":
-            acerca_de()
 
 if __name__ == "__main__":
     mostrar_menu()
