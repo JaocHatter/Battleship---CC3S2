@@ -7,18 +7,15 @@ class GameController:
         self.current_turn = 'player1'
     
     def init_board(self):
-        """Inicializa un tablero vacío de 5x5."""
         return [[0 for _ in range(5)] for _ in range(5)]
     
     def place_ships(self, player, board):
-        """Permite que un jugador coloque sus barcos en el tablero."""
         if player in self.players:
             self.players[player]['board'] = board
             return True
         return False
 
     def fire(self, player, x, y):
-        """Realiza un ataque sobre el tablero del oponente."""
         opponent = 'player2' if player == 'player1' else 'player1'
         opponent_board = self.players[opponent]['board']
         
@@ -35,11 +32,9 @@ class GameController:
             return "Miss", None
 
     def switch_turn(self):
-        """Cambia de turno entre los jugadores."""
         self.current_turn = 'player2' if self.current_turn == 'player1' else 'player1'
 
     def check_winner(self):
-        """Verifica si uno de los jugadores ha perdido."""
         if self.players['player1']['ships'] == 0:
             return 'player2'
         elif self.players['player2']['ships'] == 0:
