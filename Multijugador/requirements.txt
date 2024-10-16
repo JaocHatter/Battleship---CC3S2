@@ -1,0 +1,5 @@
+Flask==2.3.2
+prometheus_client==0.16.0
+Flask-SocketIO==5.3.4
+pip-audit==2.7.3
+nanoid==2.0.0

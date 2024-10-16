@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Example</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.3/socket.io.js"></script>
+    <script src="../static/script.js">
+    </script>
+</head>
+<body>
+    <h1>Bienvenido al multijugador battleship del grupo 11</h1>
+    <h4>Por favor, ingrese el Id de un juego existente o cree un nuevo juego para asignarle un Id</h4>
+    <br>
+    <div id="btns-container">
+        <div id="new-game-container">
+            <button onclick="newGame()">Crear un nuevo juego</button>
+        </div>
+        <div id="join-game-container">
+            <input type="text" id="room_id" placeholder="Id de la sala">
+            <button onclick="joinGame()" id="join-game">Entrar a una sala</button>
+        </div>
+    </div>  
+    
+</body>
+</html>
