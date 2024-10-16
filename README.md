@@ -410,3 +410,10 @@ Todos los servicios están conectados a una red de tipo `bridge` llamada `monito
 >En el directorio `Multijugador`, hemos desarrollado una versión mejorada del juego para permitir la modalidad multijugador, en la que dos jugadores pueden enfrentarse en tiempo real a través de una interfaz web. Esta mejora representa un avance hacia la implementación completa de partidas multijugador, donde cada jugador puede colocar sus barcos y ver el progreso del juego en sus respectivos tableros. La interfaz actual permite la configuración inicial del juego, mostrando el tablero del jugador y el de su oponente.
 
 Para ejecutar esta versión, se debe navegar al directorio `Multijugador` y utilizar el comando `flask run`, el cual inicia el servidor de Flask que gestiona la conexión entre los jugadores. Aunque hemos conseguido que ambos jugadores puedan colocar sus barcos y prepararse para jugar, la funcionalidad completa para llevar a cabo una partida, con turnos de disparo y notificaciones en tiempo real, aún está en desarrollo. Este es un paso importante hacia la implementación completa de un juego de batalla naval multijugador que esperamos perfeccionar en futuras versiones.
+
+
+## Agradecimientos:
+Agradecemos al tutorial de Luis Cabrera Benito del Blog Parzybite, de quien nos inspiramos en el código fuente del modo Offline.
+### Tutorial y explicación:
+https://parzibyte.me/blog/2021/12/21/batalla-naval-python-programacion-juego/
+Cabe mencionar que el código fuente del juego fue modificado para que pueda enviar solicitudes de métricas al servidor y además lo unico extraido de otro proyecto de este.
