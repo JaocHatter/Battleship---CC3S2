@@ -416,4 +416,5 @@ Para ejecutar esta versión, se debe navegar al directorio `Multijugador` y util
 Agradecemos al tutorial de Luis Cabrera Benito del Blog Parzybite, de quien nos inspiramos en el código fuente del modo Offline.
 ### Tutorial y explicación:
 https://parzibyte.me/blog/2021/12/21/batalla-naval-python-programacion-juego/
+
 Cabe mencionar que el código fuente del juego fue modificado para que pueda enviar solicitudes de métricas al servidor y además lo unico extraido de otro proyecto de este.
